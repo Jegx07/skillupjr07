@@ -1,1 +1,37 @@
-# Node\nnode_modules/\ndist/\n
+﻿# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+build/
+dist/
+.out/
+.next/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Env files
+.env
+.env.*
+*.local
+
+# OS/files
+.DS_Store
+Thumbs.db
+
+# Tools/Editors
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+
+# Misc caches
+.cache/
+.parcel-cache/
+.svelte-kit/
