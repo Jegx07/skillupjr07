@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,9 +9,11 @@ import Switch from '@/components/ui/switch';
 import { User, Mail, Phone, MapPin, Upload, Settings, Shield } from 'lucide-react';
 import { auth, db } from '../../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 
 console.log('Profile page loaded');
 const Profile = () => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
     firstName: '',
@@ -56,7 +59,10 @@ const Profile = () => {
             dob: personalDetails.dob || ''
           }));
         } else {
-          setError('User data not found in database.');
+          // User document doesn't exist - sign out and redirect to login
+          await signOut(auth);
+          navigate('/login');
+          setError('Your account data was not found. Please log in again or contact support.');
         }
       } catch (e) {
         setError('Error fetching user data. Check console for details.');
