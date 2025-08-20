@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { GlobalWavesBackground } from '@/components/ui/GlobalWavesBackground';
 // Firebase imports
 import { auth } from '../../../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { db } from '../../../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -27,7 +26,8 @@ const LoginPage = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      // Fetch personal details from Firestore and store in localStorage
+      
+      // Check if user document exists in Firestore
       try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
@@ -42,11 +42,19 @@ const LoginPage = () => {
             bio: data.bio || ''
           };
           localStorage.setItem('personalDetails', JSON.stringify(personalDetails));
+          navigate('/dashboard');
+        } else {
+          // User document doesn't exist - account was likely deleted
+          // Sign out the user and show appropriate message
+          await signOut(auth);
+          setError('Your account has been deleted. Please contact support or create a new account.');
         }
       } catch (fetchErr) {
-        // Optionally handle error, but allow login to proceed
+        // If there's an error fetching user data, sign out and show error
+        await signOut(auth);
+        setError('Unable to verify your account. Please try again or contact support.');
+        console.error('Error fetching user data:', fetchErr);
       }
-      navigate('/dashboard');
     } catch (err: any) {
       if (err.code === 'auth/user-not-found') {
         setError('No user found with this email. Please sign up.');
