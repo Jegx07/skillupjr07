@@ -24,26 +24,34 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="iot-dashboard" element={<IoTDashboard />} />
-            <Route path="skills" element={<SkillsPage />} />
-            <Route path="gap-analysis" element={<GapAnalysis />} />
-            <Route path="personal-details" element={<PersonalDetails />} />
-            <Route path="career-goals" element={<CareerGoals />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="progress" element={<Progress />} />
-            <Route path="recommendations" element={<Recommendations />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <UserSkillsProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="iot-dashboard" element={<IoTDashboard />} />
+                  <Route path="skills" element={<SkillsPage />} />
+                  <Route path="gap-analysis" element={<GapAnalysis />} />
+                  <Route path="personal-details" element={<PersonalDetails />} />
+                  <Route path="career-goals" element={<CareerGoals />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="progress" element={<Progress />} />
+                  <Route path="recommendations" element={<Recommendations />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+              </Routes>
+            </BrowserRouter>
+            <Toaster />
+            <Sonner />
+          </UserSkillsProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
