@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Star, Zap, Target, TrendingUp, Clock, CheckCircle, PlayCircle, AlertCircle, Sparkles, UserCircle, Activity, Heart, Brain, Wifi, WifiOff } from 'lucide-react';
 import { auth, db } from '../../../firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 import { Waves } from '@/components/ui/waves-background';
 import { useTheme } from '@/components/ui/ThemeProvider';
 
@@ -78,7 +79,10 @@ const Dashboard = () => {
             setError('No personal details found. Please complete your profile.');
           }
         } else {
-          setError('User data not found in database.');
+          // User document doesn't exist - sign out and redirect to login
+          await signOut(auth);
+          navigate('/login');
+          setError('Your account data was not found. Please log in again or contact support.');
         }
       } catch (e) {
         setError('Error fetching user data. Check console for details.');
